@@ -1,5 +1,5 @@
 {
-  "name": "regme-api",
+  "name": "devmech",
   "version": "1.0.0",
   "description": "Official rest api for hub kbs user registration",
   "main": "app.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
     "linter": "npx eslint src/*.js",
-    "start-build": "npx eslint src/*.js && npm run build && nodemon app.js ",
-    "start": "node app.js"
+    "start-build": "npm run linter && npm run build && node app.js ",
+    "start": "npm run build && node app.js"
   },
   "repository": {
     "type": "git",
@@ -27,19 +27,24 @@
   "homepage": "https://github.com/ebenKB/regme-api#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.3.4",
     "eslint": "^5.15.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.11"
   },
   "dependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/runtime": "^7.4.4",
     "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
     "jsonapi-serializer": "^3.6.4",
-    "mongoose": "^5.4.16"
+    "mongoose": "^5.4.16",
+    "regenerator-runtime": "^0.13.2"
   }
 }
