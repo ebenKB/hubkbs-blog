@@ -47,6 +47,11 @@ if (cluster.isMaster) {
   app.use(bodyParser.json());
 
   app.use(cors());
+
+  app.get('/', (req, res) => {
+    res.send('working api');
+  });
+
   app.use('/api', Router);
 
   // allow server to listen for requests
