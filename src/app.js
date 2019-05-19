@@ -55,7 +55,7 @@ if (cluster.isMaster) {
   app.use('/api', Router);
 
   // allow server to listen for requests
-  app.listen(8080, () => {
+  app.listen(process.env.PORT || 8080, () => {
     console.log('the server has started on port : ', 8080, 'CPU cores : ', numCPU);
   });
 }
