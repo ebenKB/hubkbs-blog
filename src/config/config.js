@@ -1,24 +1,36 @@
 // create the congiguration file for the system  critical data
 let config = {}
 
-if (process.env.NODE_ENV == "development") {
-  console.log('using the development settings');
+if (process.env.NODE_ENV === 'development') {
   config = {
     port: 8000,
     db: process.env.MONGODB_URI,
-    // host: process.env.host,
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+    bucketName: 'apostlite',
+    dirName: 'test',
+    region: 'US East (Ohio)',
   };
-} else if(process.env.NODE_ENV == "production") {
-  console.log('using the production settings');
+} else if (process.env.NODE_ENV === 'production') {
   config = {
     port: process.env.port,
     db: process.env.MONGODB_URI,
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+    bucketName: '',
+    dirName: 'test',
+    region: '',
   };
 } else {
-  console.log('using default settings')
+  console.log('using default settings');
   config = {
     port: process.env.port,
     db: process.env.MONGODB_URI,
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+    bucketName: 'apostlite',
+    dirName: 'test',
+    region: 'US East (Ohio)',
   };
 }
 export default config;

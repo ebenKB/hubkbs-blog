@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-// import path from 'path';
+import path from 'path';
 import cluster from 'cluster';
 import os from 'os';
 import db from './config/db';
@@ -45,6 +45,8 @@ if (cluster.isMaster) {
   // set app defaults
   const app = express();
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.static(path.join(__dirname, '/static')));
 
   app.use(cors());
 
@@ -56,6 +58,6 @@ if (cluster.isMaster) {
 
   // allow server to listen for requests
   app.listen(process.env.PORT || 8080, () => {
-    console.log('the server has started on port : ', 8080, 'CPU cores : ', numCPU);
+    console.log('the server has started on port : ', 8080);
   });
 }

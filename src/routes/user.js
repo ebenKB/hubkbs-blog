@@ -9,10 +9,11 @@ class UserRoute {
 
   UserRoutes() {
     this.router.get('/v1/users', (req, res) => {
+      console.log('you want to create a user');
       UserController.getUsers()
-        .then((data) => {
-          const jsonapiData = Serializer.serialize(data);
-          res.status(200).send(jsonapiData);
+        .then((users) => {
+          // const jsonapiData = Serializer.serialize(data);
+          res.status(200).send({ users });
         })
         .catch((err) => {
           res.status(500).json({ error: err });
@@ -20,21 +21,22 @@ class UserRoute {
     });
 
     this.router.get('/v1/user/:id', (req, res) => {
+      console.log('trying to fetch a user');
       UserController.getUser(req.params.id)
         .then((user) => {
-          const jsonapiData = Serializer.serialize(user);
-          res.status(200).json(jsonapiData);
+          // const jsonapiData = Serializer.serialize(user);
+          res.status(200).json({ user });
         })
         .catch(() => {
           res.status(500).json('sorry! an error occured while fetching records');
         });
     });
 
-    this.router.post('/v1/user', (req, res) => {
+    this.router.post('/v1/users', (req, res) => {
       const { user } = req.body;
       UserController.createUser(user)
         .then((data) => {
-          res.json(data);
+          res.json({ user: data });
         })
         .catch((err) => {
           res.status(500).json({ err });

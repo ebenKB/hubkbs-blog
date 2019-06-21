@@ -18,6 +18,7 @@ class Auth {
 
     this.Authenticate((user) => {
       // authenticate the user for all requests and return the new Autheticated user
+      console.log('we want to authenticate the users');
     });
   }
 }

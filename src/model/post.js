@@ -1,6 +1,6 @@
-import monngoose from 'mongoose';
+import mongoose from 'mongoose';
 
-const postSchema = new monngoose.Schema({
+const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -24,16 +24,38 @@ const postSchema = new monngoose.Schema({
     type: Date,
   },
 
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [
+    {
+      type: String,
+    },
+  ],
 
   author: {
-    type: monngoose.Schema.Types.ObjectId,
-    ref: 'Author',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
+
+  category: {
+    type: String,
+    default: 'general',
+  },
+
+  // subcategory: {
+  //   type: String,
+  // },
+
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 });
 
-const Post = monngoose.model('Post', postSchema);
+const Post = mongoose.model('Post', postSchema);
 export default Post;

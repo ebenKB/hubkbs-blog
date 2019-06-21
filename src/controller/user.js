@@ -38,6 +38,7 @@ class UserController {
       } else {
         User.create(user)
           .then((created) => {
+            console.log('we have created a user', created);
             resolve(created);
           })
           .catch((err) => {
