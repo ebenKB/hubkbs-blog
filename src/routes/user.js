@@ -20,8 +20,7 @@ class UserRoute {
         });
     });
 
-    this.router.get('/v1/user/:id', (req, res) => {
-      console.log('trying to fetch a user');
+    this.router.get('/v1/users/:id', (req, res) => {
       UserController.getUser(req.params.id)
         .then((user) => {
           // const jsonapiData = Serializer.serialize(user);

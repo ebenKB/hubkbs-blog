@@ -1,7 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import PostController from '../controller/post';
 import Serializer from '../serializer/post';
 import Upload from '../util/fileUpload';
 import s3Upload from '../util/s3Uploader';
+import { create } from 'domain';
 
 class PostRoute {
   constructor(apiRouter) {
@@ -32,7 +34,7 @@ class PostRoute {
         // get the post from the req body
         const newPost = reqData.body.post;
         const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.filename);
-        newPost.image = data.location;
+        newPost.image = data.Location;
 
         // creat a new post
         PostController.createPost(newPost)
@@ -47,7 +49,25 @@ class PostRoute {
     });
 
     this.router.put('/v1/posts/:id', async (req, res) => {
-      console.log('we want to edit a post');
+      // pass the request through multer to extract out the multipart form data
+      const reqData = await (Upload(req, res, 'post[image]'));
+      const { post } = reqData.body;
+      if (!post.likes) {
+        post.likes = [];
+      }
+      if (reqData.file) {
+        const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.file.filename);
+        post.image = data.Location;
+      }
+
+      PostController.updatePost(req.params.id, post)
+        .then((created) => {
+          // console.log('this is what was updated', created);
+          res.status(200).json({ post: created });
+        })
+        .catch((err) => {
+          res.status(501).json({ err });
+        });
     });
 
     this.router.delete('/v1/posts/:id', async (req, res) => {

@@ -31,6 +31,16 @@ class UserController {
     });
   }
 
+  getOneUser() {
+    return new Promise((resolve, reject) => {
+      User.findOne()
+        .then((user) => {
+          resolve(user);
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   createUser(user) {
     return new Promise((resolve, reject) => {
       if (user == null) {
@@ -38,7 +48,6 @@ class UserController {
       } else {
         User.create(user)
           .then((created) => {
-            console.log('we have created a user', created);
             resolve(created);
           })
           .catch((err) => {

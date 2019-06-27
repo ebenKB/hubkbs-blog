@@ -82,9 +82,9 @@ userSchema.statics.isExisting = username => new Promise((resolve, reject) => {
     });
 });
 
-userSchema.statics.validatePassword = pass => new Promise((resolve, reject) => {
+// userSchema.statics.validatePassword = pass => new Promise((resolve, reject) => {
 
-});
+// });
 
 // eslint-disable-next-line no-shadow
 userSchema.statics.validatePassword = function (hashPass) {

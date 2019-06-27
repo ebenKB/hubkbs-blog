@@ -9,13 +9,13 @@ class PostController {
     return new Promise((resolve, reject) => {
       // const include = ['author', 'comments'];
       Post.find()
-        .populate('author')
-        .populate({
-          path: 'comments',
-          // fetch the user for the comment
-          populate: { path: 'user' },
-        })
-        .exec()
+        // .populate('author')
+        // .populate({
+        //   path: 'comments',
+        //   // fetch the user for the comment
+        //   // populate: { path: 'user' },
+        // })
+        // .exec()
         .then((posts) => {
           resolve(posts);
         })
@@ -30,13 +30,13 @@ class PostController {
     return new Promise((resolve, reject) => {
       // const include = ['comments', 'author'];
       Post.find({ _id })
-        .populate('author')
-        .populate({
-          path: 'comments',
-          // fetch the user for the comment
-          populate: { path: 'user' },
-        })
-        .exec()
+        // .populate('author')
+        // .populate({
+        //   path: 'comments',
+        //   // fetch the user for the comment
+        //   populate: { path: 'user' },
+        // })
+        // .exec()
         .then((post) => {
           resolve(post);
         })
@@ -69,11 +69,12 @@ class PostController {
       if (newPost == null) {
         reject('Sorry new post is empty');
       }
-      Post.findByIdAndUpdate({ _id }, newPost, { new: true })
+      Post.findByIdAndUpdate(_id, newPost, { new: true })
         .then((updatedPost) => {
           resolve(updatedPost);
         })
         .catch((err) => {
+          console.log(err);
           reject('sorry an error occured while updating the post', err);
         });
     });
