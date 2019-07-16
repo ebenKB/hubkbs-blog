@@ -46,13 +46,13 @@ const Category = {
 //   });
 // }
 
-CategoryModel.create(Category)
-  .then(async (data) => {
+// CategoryModel.create(Category)
+  // .then(async (data) => {
     // const sub = await createSubCategory();
     // data.subcategories.push(sub.name);
     // data.save();
-    console.log('we have created a new category', data);
-  });
+    // console.log('we have created a new category', data);
+  // });
 
 // AuthorModel.create(Author)
 //   .then((created) => {
@@ -129,3 +129,16 @@ async function createComment() {
 //         console.log('we created a new post', data);
 //       });
 //   });
+
+// eslint-disable-next-line wrap-iife
+(function () {
+  PostModel.find()
+    .then((data) => {
+      // eslint-disable-next-line no-param-reassign
+      data.map((d) => {
+        // eslint-disable-next-line no-param-reassign
+        d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
+        d.save();
+      });
+    });
+})();

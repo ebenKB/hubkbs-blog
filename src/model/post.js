@@ -55,6 +55,11 @@ const postSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+
+  isConfirmed: { // whether the post has been approved or not
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Post = mongoose.model('Post', postSchema);

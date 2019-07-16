@@ -12,10 +12,10 @@ import cluster from 'cluster';
 import os from 'os';
 import db from './config/db';
 import Router from '../lib/router';
-// import Seed from '../lib/util/seed';
+import Seed from '../lib/util/seed';
 
 // eslint-disable-next-line no-unused-expressions
-// Seed;
+Seed;
 
 // check the number cpu cores
 const numCPU = os.cpus().length;

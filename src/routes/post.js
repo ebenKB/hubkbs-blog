@@ -3,7 +3,6 @@ import PostController from '../controller/post';
 import Serializer from '../serializer/post';
 import Upload from '../util/fileUpload';
 import s3Upload from '../util/s3Uploader';
-import { create } from 'domain';
 
 class PostRoute {
   constructor(apiRouter) {
@@ -13,8 +12,6 @@ class PostRoute {
 
   PostRoutes() {
     this.router.get('/v1/posts', async (req, res) => {
-      const { headers } = req;
-      console.log('these are the headers', headers.authorization);
       const post = await PostController.getPosts();
       // const jsonapiData = Serializer.serialize(posts);
       res.status(200).json({ post });
