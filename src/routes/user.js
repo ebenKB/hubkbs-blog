@@ -9,7 +9,6 @@ class UserRoute {
 
   UserRoutes() {
     this.router.get('/v1/users', (req, res) => {
-      console.log('you want to create a user');
       UserController.getUsers()
         .then((users) => {
           // const jsonapiData = Serializer.serialize(data);

@@ -41,6 +41,21 @@ class UserController {
     });
   }
 
+  getAuthuser({ username, password }) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ email: username })
+        .then((user) => {
+          if (user) {
+            if (User.isValidPassword(user.password, password, user.salt)) {
+              resolve(user);
+            } else {
+              reject('invalid credentials');
+            }
+          } else reject('credentials do not match');
+        }).catch(err => reject(err));
+    });
+  }
+
   createUser(user) {
     return new Promise((resolve, reject) => {
       if (user == null) {
