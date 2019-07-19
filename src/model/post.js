@@ -64,12 +64,5 @@ const postSchema = new mongoose.Schema({
   },
 });
 
-// eslint-disable-next-line func-names
-postSchema.pre('save', function () {
-  // const post = this;
-  // post.slug = post.title.toLowercase().replace(' ', '-').tirm().replace('_', '-');
-  console.log('we are in the pre save of post and this is the slug');
-});
-
 const Post = mongoose.model('Post', postSchema);
 export default Post;
