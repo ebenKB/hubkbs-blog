@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
+  slug: {
+    type: String,
+    // unique: true,
+  },
+
   title: {
     type: String,
     required: true,
@@ -45,11 +50,8 @@ const postSchema = new mongoose.Schema({
   category: {
     type: String,
     default: 'general',
+    unique: true,
   },
-
-  // subcategory: {
-  //   type: String,
-  // },
 
   isActive: {
     type: Boolean,
@@ -60,6 +62,13 @@ const postSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+});
+
+// eslint-disable-next-line func-names
+postSchema.pre('save', function () {
+  // const post = this;
+  // post.slug = post.title.toLowercase().replace(' ', '-').tirm().replace('_', '-');
+  console.log('we are in the pre save of post and this is the slug');
 });
 
 const Post = mongoose.model('Post', postSchema);

@@ -41,9 +41,10 @@ class UserController {
     });
   }
 
-  getAuthuser({ username, password }) {
+  getAuthuser({ email, password }) {
+    console.log('trying to find an auth user', email, password);
     return new Promise((resolve, reject) => {
-      User.findOne({ email: username })
+      User.findOne({ email }, '_id firstname lastname password status type email salt')
         .then((user) => {
           if (user) {
             if (User.isValidPassword(user.password, password, user.salt)) {

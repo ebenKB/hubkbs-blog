@@ -3,6 +3,7 @@ import PostController from '../controller/post';
 import Serializer from '../serializer/post';
 import Upload from '../util/fileUpload';
 import s3Upload from '../util/s3Uploader';
+import Authorizer from '../controller/auth';
 
 class PostRoute {
   constructor(apiRouter) {
@@ -13,7 +14,6 @@ class PostRoute {
   PostRoutes() {
     this.router.get('/v1/posts', async (req, res) => {
       const post = await PostController.getPosts();
-      // const jsonapiData = Serializer.serialize(posts);
       res.status(200).json({ post });
     });
 
@@ -26,48 +26,55 @@ class PostRoute {
     });
 
     this.router.post('/v1/posts', async (req, res) => {
-      try {
-        const reqData = await (Upload(req, res, 'post[image]'));
-        // get the post from the req body
-        const newPost = reqData.body.post;
-        const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.filename);
-        newPost.image = data.Location;
+      // check if the incoming request is authorized
+      if (await Authorizer.isAuthorized(req)) {
+        try {
+          const reqData = await (Upload(req, res, 'post[image]'));
+          // get the post from the req body
+          const newPost = reqData.body.post;
+          const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.filename);
+          newPost.image = data.Location;
 
-        // creat a new post
-        PostController.createPost(newPost)
-          .then((post) => {
-            res.status(200).send({ post });
-          }).catch((err) => {
-            console.log('error while creating post', err);
-          });
-      } catch (err) {
-        res.status(501).json({ err });
-      }
+          // creat a new post
+          PostController.createPost(newPost)
+            .then((post) => {
+              res.status(200).send({ post });
+            }).catch((err) => {
+              res.status(501).json({ err });
+            });
+        } catch (err) {
+          res.status(501).json({ err });
+        }
+      } else res.status(401).json('Access denied');
     });
 
     this.router.put('/v1/posts/:id', async (req, res) => {
+      if (await Authorizer.isAuthorized(req)) {
       // pass the request through multer to extract out the multipart form data
-      const reqData = await (Upload(req, res, 'post[image]'));
-      const { post } = reqData.body;
-      if (!post.likes) {
-        post.likes = [];
-      }
-      if (reqData.file) {
-        const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.file.filename);
-        post.image = data.Location;
-      }
+        const reqData = await (Upload(req, res, 'post[image]'));
+        const { post } = reqData.body;
+        if (!post.likes) {
+          post.likes = [];
+        }
+        if (reqData.file) {
+          const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.filename);
+          post.image = data.Location;
+        }
 
-      PostController.updatePost(req.params.id, post)
-        .then((created) => {
-          // console.log('this is what was updated', created);
-          res.status(200).json({ post: created });
-        })
-        .catch((err) => {
-          res.status(501).json({ err });
-        });
+        PostController.updatePost(req.params.id, post)
+          .then((created) => {
+            res.status(200).json({ post: created });
+          })
+          .catch((err) => {
+            res.status(501).json({ err });
+          });
+      } else res.status(401).json('Access Denied');
     });
 
     this.router.delete('/v1/posts/:id', async (req, res) => {
+      if (await Authorizer.isAuthorized(req)) {
+        console.log('deleting post');
+      } else res.status(401).json('Access Denied');
       console.log('we want to delete a post');
     });
   }

@@ -2,15 +2,18 @@
 /* eslint-disable class-methods-use-this */
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import UserController from '../controller/user';
+import UserController from "./user";
+import User from '../model/user';
 
 class Auth {
   generateToken(user) {
+    console.log('in the function to generat token');
     return new Promise(async (resolve, reject) => {
       try {
         // const user = await UserController.getAuthuser(u);
         const privateKey = fs.readFileSync('./private.pem', 'utf8');
         const token = jwt.sign({ user }, privateKey, { algorithm: 'HS256' }, { expiresIn: '1h' });
+        console.log('this is  the token the function generated', token);
         resolve(token);
       } catch (err) {
         reject(err);
@@ -31,20 +34,40 @@ class Auth {
     });
   }
 
-  isAuthorized(token) {
-    return new Promise(async (resolve, reject) => {
-      // verfiy whether the token coming from the front end is valid
-      const user = await this.verifyToken(token);
+  // isAuthorized(token) {
+  //   return new Promise(async (resolve, reject) => {
+  //     // verfiy whether the token coming from the front end is valid
+  //     const user = await this.verifyToken(token);
 
-      // check if the user with the token is a valid user
-      UserController.getAuthuser(user)
-        .then((data) => {
-          if (data) {
+  //     // check if the user with the token is a valid user
+  //     UserController.getAuthuser(user)
+  //       .then((data) => {
+  //         if (data) {
+  //           resolve(true);
+  //         }
+  //       }).catch(() => reject(false));
+  //   });
+  // }
+
+  isAuthorized(req) {
+    return new Promise(async (resolve, reject) => {
+      const { authorization } = req.headers;
+      if (authorization === null || authorization === 'undefined') {
+        reject(false);
+      } else {
+        const token = authorization.split(' ')[1];
+
+        // verfiy whether the token coming from the front end is valid
+        const { user } = await this.verifyToken(token);
+
+        // check if the user with the token is a valid user
+        User.findOne({ email: user.email, password: user.password })
+          .then(() => {
             resolve(true);
-          }
-        }).catch(() => reject(false));
+          })
+          .catch(() => reject(false));
+      }
     });
   }
 }
-
 export default new Auth();

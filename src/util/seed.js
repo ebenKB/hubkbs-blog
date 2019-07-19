@@ -5,12 +5,8 @@ import CategoryModel from '../model/category';
 import SubcatModel from '../model/subcategory';
 import CommentModel from '../model/comment';
 import UserModel from '../model/user';
-
-
-// const Author = {
-//   firstname: Faker.name.lastName(),
-//   lastname: Faker.name.firstName(),
-// };
+import AuthorModel from '../model/author';
+import post from '../controller/post';
 
 const Author = {
   username: Faker.name.firstName(),
@@ -18,6 +14,7 @@ const Author = {
   contact: '+233456787654',
   firstname: Faker.name.lastName(),
   lastname: Faker.name.firstName(),
+  password: 'password',
 };
 
 const Post = {
@@ -28,7 +25,6 @@ const Post = {
 
 const Category = {
   name: Faker.commerce.product(),
-  // subcategories: ['Romance', 'Sports', 'Adventure', 'Biblical'],
 };
 
 // async function createSubCategory() {
@@ -39,20 +35,19 @@ const Category = {
 
 //     SubcatModel.create(subcat)
 //       .then((data) => {
-//         console.log('created a sub category', subcat);
 //         resolve(data);
 //       })
 //       .catch(err => reject(err));
 //   });
 // }
 
-// CategoryModel.create(Category)
-  // .then(async (data) => {
+CategoryModel.create(Category)
+  .then(async (data) => {
     // const sub = await createSubCategory();
     // data.subcategories.push(sub.name);
-    // data.save();
-    // console.log('we have created a new category', data);
-  // });
+    data.save();
+    console.log('we have created a new category', data);
+  });
 
 // AuthorModel.create(Author)
 //   .then((created) => {
@@ -106,39 +101,39 @@ async function createComment() {
 }
 
 // create post with author
-// async function createPost() {
-//   return new Promise(async (resolve, reject) => {
-//     const Athr = await createUser();
-//     Post.author = Athr._id;
+async function createPost() {
+  return new Promise(async (resolve, reject) => {
+    const Athr = await createUser();
+    Post.author = Athr._id;
 
-//     // create the post
-//     PostModel.create(Post)
-//       .then((cr) => {
-//         resolve(cr);
-//       })
-//       .catch(err => reject(err));
-//   });
-// }
+    // create the post
+    PostModel.create(Post)
+      .then((cr) => {
+        resolve(cr);
+      })
+      .catch(err => reject(err));
+  });
+}
 
 // create post and save comment to the post
-// createPost()
-//   .then(async (crPost) => {
-//     crPost.comments.push(await createComment());
-//     crPost.save()
-//       .then((data) => {
-//         console.log('we created a new post', data);
-//       });
-//   });
+createPost()
+  .then(async (crPost) => {
+    crPost.comments.push(await createComment());
+    crPost.save()
+      .then((data) => {
+        console.log('we created a new post', data);
+      });
+  });
 
 // eslint-disable-next-line wrap-iife
-(function () {
-  PostModel.find()
-    .then((data) => {
-      // eslint-disable-next-line no-param-reassign
-      data.map((d) => {
-        // eslint-disable-next-line no-param-reassign
-        d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
-        d.save();
-      });
-    });
-})();
+// (function () {
+//   PostModel.find()
+//     .then((data) => {
+//       // eslint-disable-next-line no-param-reassign
+//       data.map((d) => {
+//         // eslint-disable-next-line no-param-reassign
+//         d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
+//         d.save();
+//       });
+//     });
+// })();
