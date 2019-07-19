@@ -1,9 +1,14 @@
 import mongoose from 'mongoose';
+import slug from 'mongoose-slug-generator';
+
+// inject slug into mongoose
+mongoose.plugin(slug);
 
 const postSchema = new mongoose.Schema({
   slug: {
     type: String,
-    // unique: true,
+    slug: 'title',
+    unique: true,
   },
 
   title: {

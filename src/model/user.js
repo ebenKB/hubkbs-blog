@@ -18,11 +18,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 
-  // username: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
   firstname: {
     type: String,
@@ -49,26 +49,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'regular',
   },
+  // followers: [
+  //   {
+  //     type: String,
+  //     ref: mongoose.Types.ObjectId('user'),
+  //   },
+  // ],
 });
 
-// const hashPass = pass => new Promise((resolve, reject) => {
-//   if (pass == null || pass === 'undefined') {
-//     reject('Nothing provided to hash function');
-//   }
-//   // const secret = 'abcdef';
-//   // const hash = crypto.createHmac('sha256', secret).update(pass).digest('hex');
-//   resolve(hash);
-// });
-
 userSchema.statics.isValidPassword = function (oldPass, newPass, salt) {
-  // const secret = 'abcdef';
-  // const hash = crypto.createHmac('sha256', secret).update(pass).digest('hex');
-  // console.log('this is the new hash', hash);
-  // if (this.password === hash) {
-  //   console.log('the two hashes are the same');
-  // } else {
-  //   console.log('the hashes are not the sames');
-  // }
   const hash = crypto.pbkdf2Sync(newPass, salt, 1000, 64, 'sha512').toString('hex');
   // console.log('this is the new hash = ', hash, 'and this is the password', oldPass);
   return oldPass === hash;
@@ -87,10 +76,6 @@ userSchema.methods.setPassword = function (password) {
 userSchema.pre('save', async function (next) {
   const user = this;
   this.setPassword(user.password);
-
-  // const newPass = await hashPass(user.password);
-  // user.password = newPass;
-  // console.log('we have to check your password in pre...', user);
   next();
 });
 
@@ -118,19 +103,5 @@ userSchema.statics.isExisting = username => new Promise((resolve, reject) => {
       reject(err);
     });
 });
-
-// userSchema.statics.validatePassword = pass => new Promise((resolve, reject) => {
-
-// });
-
-// eslint-disable-next-line no-shadow
-// userSchema.statics.validatePassword = function (hashPass) {
-//   return new Promise((resolve, reject) => {
-//     if (hashPass == null) {
-//       reject('no password provided to decode');
-//     }
-//     const pass = this.password;
-//   });
-// };
 
 export default User;

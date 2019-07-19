@@ -13,8 +13,10 @@ class PostRoute {
 
   PostRoutes() {
     this.router.get('/v1/posts', async (req, res) => {
-      const post = await PostController.getPosts();
-      res.status(200).json({ post });
+      if (await Authorizer.isAuthorized(req)) {
+        const post = await PostController.getPosts();
+        res.status(200).json({ post });
+      } else console.log('the token is not valid');
     });
 
     this.router.get('/v1/posts/:id', async (req, res) => {

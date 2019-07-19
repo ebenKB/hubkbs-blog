@@ -7,13 +7,11 @@ import User from '../model/user';
 
 class Auth {
   generateToken(user) {
-    console.log('in the function to generat token');
     return new Promise(async (resolve, reject) => {
       try {
         // const user = await UserController.getAuthuser(u);
         const privateKey = fs.readFileSync('./private.pem', 'utf8');
-        const token = jwt.sign({ user }, privateKey, { algorithm: 'HS256' }, { expiresIn: '1h' });
-        console.log('this is  the token the function generated', token);
+        const token = jwt.sign({ user }, privateKey, { algorithm: 'HS256', expiresIn: '1hr' });
         resolve(token);
       } catch (err) {
         reject(err);
@@ -24,7 +22,7 @@ class Auth {
   verifyToken(token) {
     return new Promise((resolve, reject) => {
       const privateKey = fs.readFileSync('./private.pem', 'utf8');
-      jwt.verify(token, privateKey, { algorithm: 'HS256' }, (err, user) => {
+      jwt.verify(token, privateKey, { algorithm: 'HS256', ignoreExpiration: false }, (err, user) => {
         if (err) {
           reject(err);
         } else {
@@ -57,15 +55,20 @@ class Auth {
       } else {
         const token = authorization.split(' ')[1];
 
-        // verfiy whether the token coming from the front end is valid
-        const { user } = await this.verifyToken(token);
+        if (token === 'undefined' || token == null) {
+          reject(false);
+        } else {
+          // verfiy whether the token coming from the front end is valid
+          const { user } = await this.verifyToken(token);
+          console.log('result from the async verify method', user);
 
-        // check if the user with the token is a valid user
-        User.findOne({ email: user.email, password: user.password })
-          .then(() => {
-            resolve(true);
-          })
-          .catch(() => reject(false));
+          // check if the user with the token is a valid user
+          User.findOne({ email: user.email, password: user.password })
+            .then(() => {
+              resolve(true);
+            })
+            .catch(() => reject(false));
+        }
       }
     });
   }
