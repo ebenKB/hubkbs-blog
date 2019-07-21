@@ -39,22 +39,24 @@ const userSchema = new mongoose.Schema({
   salt: {
     type: String,
   },
-  // this indicates whether the user is active or blocked 0 = blocked, 1 = active
+
+  // this indicates whether the user is active or blocked 0 = blocked, 1 = active, 2 = pending
   status: {
     type: String,
-    default: 1,
+    default: 2,
   },
 
   type: {
     type: String,
     default: 'regular',
   },
-  // followers: [
-  //   {
-  //     type: String,
-  //     ref: mongoose.Types.ObjectId('user'),
-  //   },
-  // ],
+
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
+  ],
 });
 
 userSchema.statics.isValidPassword = function (oldPass, newPass, salt) {

@@ -5,17 +5,11 @@ import Post from '../model/post';
 
 class PostController {
   // retrieve all posts from the database
-  async getPosts() {
+  async getPosts(options) {
     return new Promise((resolve, reject) => {
-      // const include = ['author', 'comments'];
-      Post.find()
-        // .populate('author')
-        // .populate({
-        //   path: 'comments',
-        //   // fetch the user for the comment
-        //   // populate: { path: 'user' },
-        // })
-        // .exec()
+      Post.find({ isConfirmed: options.isConfirmed })
+        .skip((options.page - 1) * options.limit)
+        .limit(options.limit)
         .then((posts) => {
           resolve(posts);
         })
@@ -28,15 +22,7 @@ class PostController {
   // find a single post using the post id
   async getPost(_id) {
     return new Promise((resolve, reject) => {
-      // const include = ['comments', 'author'];
       Post.find({ _id })
-        // .populate('author')
-        // .populate({
-        //   path: 'comments',
-        //   // fetch the user for the comment
-        //   populate: { path: 'user' },
-        // })
-        // .exec()
         .then((post) => {
           resolve(post);
         })
@@ -57,7 +43,6 @@ class PostController {
           resolve(createdPost);
         })
         .catch((err) => {
-          console.log(err);
           reject('an error occured while creating the post', err);
         });
     });
@@ -74,7 +59,6 @@ class PostController {
           resolve(updatedPost);
         })
         .catch((err) => {
-          console.log(err);
           reject('sorry an error occured while updating the post', err);
         });
     });

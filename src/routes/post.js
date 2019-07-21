@@ -13,10 +13,34 @@ class PostRoute {
 
   PostRoutes() {
     this.router.get('/v1/posts', async (req, res) => {
-      if (await Authorizer.isAuthorized(req)) {
-        const post = await PostController.getPosts();
-        res.status(200).json({ post });
-      } else console.log('the token is not valid');
+      const options = {
+        page: 1,
+        limit: 10,
+        isConfirmed: true,
+      };
+
+      // get the paging options from the req query params
+      const { page, limit, isConfirmed } = req.query;
+      if (limit && (parseInt(limit) > 10)) {
+        options.limit = parseInt(limit);
+      }
+
+      if (page && parseInt(page) > 1) {
+        options.page = parseInt(page);
+      }
+
+      if (isConfirmed) {
+        options.isConfirmed = isConfirmed;
+      }
+      // fetch the posts
+      try {
+        if (await Authorizer.isAuthorized(req)) {
+          const post = await PostController.getPosts(options);
+          res.status(200).json({ post });
+        }
+      } catch (err) {
+        res.status(401).json({ err });
+      }
     });
 
     this.router.get('/v1/posts/:id', async (req, res) => {
@@ -32,7 +56,6 @@ class PostRoute {
       if (await Authorizer.isAuthorized(req)) {
         try {
           const reqData = await (Upload(req, res, 'post[image]'));
-          // get the post from the req body
           const newPost = reqData.body.post;
           const data = await s3Upload.uploadToS3(reqData.file.path, reqData.file.filename);
           newPost.image = data.Location;

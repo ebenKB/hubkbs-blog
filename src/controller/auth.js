@@ -51,23 +51,22 @@ class Auth {
     return new Promise(async (resolve, reject) => {
       const { authorization } = req.headers;
       if (authorization === null || authorization === 'undefined') {
-        reject(false);
+        reject('Token is not present');
       } else {
         const token = authorization.split(' ')[1];
 
         if (token === 'undefined' || token == null) {
-          reject(false);
+          reject('No Authorization token');
         } else {
           // verfiy whether the token coming from the front end is valid
           const { user } = await this.verifyToken(token);
-          console.log('result from the async verify method', user);
 
           // check if the user with the token is a valid user
           User.findOne({ email: user.email, password: user.password })
             .then(() => {
               resolve(true);
             })
-            .catch(() => reject(false));
+            .catch(() => reject('Token is exprired'));
         }
       }
     });

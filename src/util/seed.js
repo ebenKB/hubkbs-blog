@@ -130,14 +130,15 @@ import post from '../controller/post';
 // end comment
 
 // eslint-disable-next-line wrap-iife
-// (function () {
-//   PostModel.find()
-//     .then((data) => {
-//       // eslint-disable-next-line no-param-reassign
-//       data.map((d) => {
-//         // eslint-disable-next-line no-param-reassign
-//         d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
-//         d.save();
-//       });
-//     });
-// })();
+(function () {
+  PostModel.find()
+    .then((data) => {
+      // eslint-disable-next-line no-param-reassign
+      data.map((d) => {
+        // eslint-disable-next-line no-param-reassign
+        // d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
+        d.isConfirmed = true
+        d.save();
+      });
+    });
+})();

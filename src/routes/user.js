@@ -19,6 +19,10 @@ class UserRoute {
         });
     });
 
+    this.router.post('/v1/users/confirm/:token', (req, res) => {
+      console.log('we have to confirm our email here', req.token);
+    });
+
     this.router.get('/v1/users/:id', (req, res) => {
       UserController.getUser(req.params.id)
         .then((user) => {
