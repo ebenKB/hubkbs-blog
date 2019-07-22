@@ -1,6 +1,8 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable class-methods-use-this */
 import User from '../model/user';
+import Mailer from './mailer';
+import Auth from './auth';
 
 class UserController {
   getUsers() {
@@ -63,7 +65,11 @@ class UserController {
         reject('You did not provide a user to create');
       } else {
         User.create(user)
-          .then((created) => {
+          .then(async (created) => {
+            // send a confirmation link to the user
+            // eslint-disable-next-line no-underscore-dangle
+            const msg = await this._buildConfirmMsg(created);
+            Mailer.sendGrid(created.email, msg);
             resolve(created);
           })
           .catch((err) => {
@@ -101,6 +107,19 @@ class UserController {
           .catch((err) => {
             reject(err);
           });
+      }
+    });
+  }
+
+  _buildConfirmMsg(user) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await Auth.generateToken(user);
+        const msg = 'Congratulations!!! You are almost done with your registration. Please follow this link to complete your'
+                  + `account http:hubkbs-blogs.com/user/confirm/${token}`;
+        resolve(msg);
+      } catch (err) {
+        reject(err);
       }
     });
   }

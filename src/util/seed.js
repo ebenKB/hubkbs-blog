@@ -6,7 +6,9 @@ import SubcatModel from '../model/subcategory';
 import CommentModel from '../model/comment';
 import UserModel from '../model/user';
 import AuthorModel from '../model/author';
-import post from '../controller/post';
+import Auth from '../controller/auth';
+import Mailer from '../controller/mailer';
+
 
 // start comment
 
@@ -65,7 +67,12 @@ import post from '../controller/post';
 // async function createUser() {
 //   return new Promise((resolve, reject) => {
 //     UserModel.create(Author)
-//       .then((created) => {
+//       .then(async (created) => {
+//         const msg = await _buildConfirmMsg(created);
+//         Mailer.sendGrid('unveilface@gmail.com', msg)
+//           .catch((err) => {
+//             console.log(err);
+//           });
 //         resolve(created);
 //       })
 //       .catch(err => reject(err));
@@ -130,15 +137,28 @@ import post from '../controller/post';
 // end comment
 
 // eslint-disable-next-line wrap-iife
-(function () {
-  PostModel.find()
-    .then((data) => {
-      // eslint-disable-next-line no-param-reassign
-      data.map((d) => {
-        // eslint-disable-next-line no-param-reassign
-        // d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
-        d.isConfirmed = true
-        d.save();
-      });
-    });
-})();
+// (function () {
+//   PostModel.find()
+//     .then((data) => {
+//       // eslint-disable-next-line no-param-reassign
+//       data.map((d) => {
+//         // eslint-disable-next-line no-param-reassign
+//         // d.image = 'https://apostlite.s3.amazonaws.com/hubkbs-blog/1561631920226-ember-map.jpg';
+//         d.isConfirmed = true
+//         d.save();
+//       });
+//     });
+// })();
+
+async function _buildConfirmMsg(user) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = await Auth.generateToken(user);
+      const msg = 'Congratulations!!! You are almost done with your registration. Please follow this link to complete your'
+                + `account https://046820f3.ngrok.io/api/v1/users/confirm/${token}`;
+      resolve(msg);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}

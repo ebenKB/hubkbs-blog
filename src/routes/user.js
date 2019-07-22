@@ -1,5 +1,6 @@
 import UserController from '../controller/user';
 import Serializer from '../serializer/user';
+import Auth from '../controller/auth';
 
 class UserRoute {
   constructor(apiRouter) {
@@ -20,7 +21,28 @@ class UserRoute {
     });
 
     this.router.post('/v1/users/confirm/:token', (req, res) => {
-      console.log('we have to confirm our email here', req.token);
+      const { token } = req;
+      Auth.verifyToken(token)
+        .then(() => {
+          console.log('the token has been verified');
+        }).catch((err) => {
+          console.log('an eerror occured while verifying the token', err);
+        });
+      res.send({ token });
+    });
+
+    this.router.get('/v1/users/confirm/:token', async (req, res) => {
+      const { token } = req.params;
+      try {
+        const user = await Auth.verifyToken(token);
+        user.status = 1;
+        user.save();
+        res.redirect('https://hubkbs-blogs.herokuapp.com/login');
+      } catch (err) {
+        console.log('an eerror occured while verifying the token', err.message);
+      }
+      // redirect the user to the front end
+      // res.send({ token });
     });
 
     this.router.get('/v1/users/:id', (req, res) => {
