@@ -18,12 +18,6 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-
   firstname: {
     type: String,
   },
@@ -57,6 +51,11 @@ const userSchema = new mongoose.Schema({
       ref: 'user',
     },
   ],
+
+  image: {
+    type: String,
+  },
+
 });
 
 userSchema.statics.isValidPassword = function (oldPass, newPass, salt) {

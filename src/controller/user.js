@@ -116,7 +116,7 @@ class UserController {
       try {
         const token = await Auth.generateToken(user);
         const msg = 'Congratulations!!! You are almost done with your registration. Please follow this link to complete your'
-                  + `account http:hubkbs-blogs.com/user/confirm/${token}`;
+                  + `account https://ebb6f6fc.ngrok.io/api/v1/users/confirm/${token}`;
         resolve(msg);
       } catch (err) {
         reject(err);

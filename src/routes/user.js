@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import UserController from '../controller/user';
 import Serializer from '../serializer/user';
 import Auth from '../controller/auth';
@@ -34,15 +35,13 @@ class UserRoute {
     this.router.get('/v1/users/confirm/:token', async (req, res) => {
       const { token } = req.params;
       try {
-        const user = await Auth.verifyToken(token);
-        user.status = 1;
-        user.save();
-        res.redirect('https://hubkbs-blogs.herokuapp.com/login');
+        const { user } = await Auth.verifyToken(token);
+        user.status = 1; // update the user's account to confirmed
+        UserController.updateUser(user._id, user)
+          .then(() => res.redirect('https://hubkbs-blogs.herokuapp.com/login'));
       } catch (err) {
         console.log('an eerror occured while verifying the token', err.message);
       }
-      // redirect the user to the front end
-      // res.send({ token });
     });
 
     this.router.get('/v1/users/:id', (req, res) => {

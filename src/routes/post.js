@@ -34,12 +34,10 @@ class PostRoute {
       }
       // fetch the posts
       try {
-        if (await Authorizer.isAuthorized(req)) {
-          const post = await PostController.getPosts(options);
-          res.status(200).json({ post });
-        }
+        const post = await PostController.getPosts(options);
+        res.status(200).json({ post });
       } catch (err) {
-        res.status(401).json({ err });
+        res.status(501).json({ err });
       }
     });
 
