@@ -37,7 +37,7 @@ if (cluster.isMaster) {
   // set app defaults
   const app = express();
 
-  const whitelist = ['http://localhost:4200', 'https://https://hubkbs-blogs.herokuapp.com'];
+  const whitelist = ['http://localhost:4200', 'https://hubkbs-blogs.herokuapp.com'];
   const corsOptions = {
     origin(origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
