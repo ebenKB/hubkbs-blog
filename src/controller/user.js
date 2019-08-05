@@ -43,6 +43,14 @@ class UserController {
     });
   }
 
+  getUserByEmail(email) {
+    return new Promise((resolve, reject) => {
+      User.findOne({ email })
+        .then(user => resolve(user))
+        .catch(err => reject(err));
+    });
+  }
+
   getAuthuser({ email, password }) {
     console.log('trying to find an auth user', email, password);
     return new Promise((resolve, reject) => {

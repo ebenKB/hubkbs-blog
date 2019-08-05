@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import UserController from "./user";
+// import UserController from "./user";
 import User from '../model/user';
 
 class Auth {
