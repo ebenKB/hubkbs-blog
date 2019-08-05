@@ -27,9 +27,9 @@ import Mailer from '../controller/mailer';
 //   image: Faker.internet.avatar(),
 // };
 
-// const Category = {
-//   name: Faker.commerce.product(),
-// };
+const Category = {
+  name: 'General',
+};
 
 // // async function createSubCategory() {
 // //   return new Promise((resolve, reject) => {
@@ -45,13 +45,13 @@ import Mailer from '../controller/mailer';
 // //   });
 // // }
 
-// CategoryModel.create(Category)
-//   .then(async (data) => {
-//     // const sub = await createSubCategory();
-//     // data.subcategories.push(sub.name);
-//     data.save();
-//     console.log('we have created a new category', data);
-//   });
+CategoryModel.create(Category)
+  .then(async (data) => {
+    // const sub = await createSubCategory();
+    // data.subcategories.push(sub.name);
+    data.save();
+    console.log('we have created a new category', data);
+  });
 
 // // AuthorModel.create(Author)
 // //   .then((created) => {

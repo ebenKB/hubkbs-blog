@@ -1,8 +1,3 @@
-// import '@babel/polyfill';
-// import 'core-js/stable';
-// import 'regenerator-runtime/runtime';
-// import 'regenerator-runtime/runtime';
-
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
@@ -23,9 +18,6 @@ const numCPU = os.cpus().length;
 // require('dotenv').config();
 dotenv.config();
 db.initDB()
-  .then(() => {
-    console.log('Init DB success');
-  })
   .catch((err) => {
     console.log(`init DB FAILURE ${err}`);
   });
@@ -44,11 +36,21 @@ if (cluster.isMaster) {
 } else {
   // set app defaults
   const app = express();
+
+  const whitelist = ['http://localhost:4200', 'https://https://hubkbs-blogs.herokuapp.com'];
+  const corsOptions = {
+    origin(origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+  };
+  app.use(cors(corsOptions));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.static(path.join(__dirname, '/static')));
-
-  app.use(cors());
 
   app.get('/', (req, res) => {
     res.send('working api');
@@ -56,8 +58,9 @@ if (cluster.isMaster) {
 
   app.use('/api', Router);
 
+  const port = process.env.PORT || 8080;
   // allow server to listen for requests
-  app.listen(process.env.PORT || 8080, () => {
-    console.log('the server has started on port : ', 8080);
+  app.listen(port, () => {
+    console.log('the server has started on port : ', port);
   });
 }
