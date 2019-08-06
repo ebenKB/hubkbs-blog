@@ -7,9 +7,9 @@ if (process.env.NODE_ENV === 'development') {
     db: process.env.MONGODB_URI,
     accessKeyId: process.env.accessKeyId,
     secretAccessKey: process.env.secretAccessKey,
-    bucketName: 'apostlite',
-    dirName: 'test',
-    region: 'US East (Ohio)',
+    // bucketName: 'hubkbs-blog',
+    // dirName: 'posts',
+    // region: 'US East (Ohio)',
   };
 } else if (process.env.NODE_ENV === 'production') {
   config = {
@@ -17,12 +17,11 @@ if (process.env.NODE_ENV === 'development') {
     db: process.env.MONGODB_URI,
     accessKeyId: process.env.accessKeyId,
     secretAccessKey: process.env.secretAccessKey,
-    bucketName: '',
-    dirName: 'test',
-    region: '',
+    bucketName: 'hubkbs-blog',
+    dirName: 'posts',
+    region: 'US East (Ohio)',
   };
 } else {
-  console.log('using default settings');
   config = {
     port: process.env.port,
     db: process.env.MONGODB_URI,
