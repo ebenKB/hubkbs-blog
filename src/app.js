@@ -37,13 +37,14 @@ if (cluster.isMaster) {
   // set app defaults
   const app = express();
 
-  const whitelist = ['http://localhost:4200', 'https://hubkbs-blogs.herokuapp.com'];
+  const whitelist = ['http://localhost:4200', 'https://hubkbs-blogs.herokuapp.com', 'https://hubkbsblogs.herokuapp.com'];
   const corsOptions = {
     origin(origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        // callback(new Error('Not allowed by CORS'));
+        callback('NOT ALLOWED BY CORS');
       }
     },
   };
